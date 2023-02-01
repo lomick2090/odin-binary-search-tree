@@ -1,5 +1,3 @@
-
-
 const prettyPrint = (node, prefix = '', isLeft = true) => {
     if (node.right !== null) {
       prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
@@ -23,11 +21,11 @@ class node {
 class tree {
     constructor(arr) {
         this.buildTree = (arr, start = 0, end = arr.length) => {
-            let mid = Math.round((start + end)/2);
-            if (start > end) {
+            if (start > end || end == 0) {
                 return null;
             }
-            
+
+            let mid = Math.round((start + end)/2);            
             let rootData = arr[mid-1];
         
             
@@ -60,24 +58,37 @@ class tree {
         
         },
 
-        this.remove = (value, arr = this.root) => {
-            if (arr.data == value) {
-                if (arr.left == null) {
-                    if (arr.right == null) {
-                        return null;
-                    } else {
-                        return arr.right;
-                    }
-                } else if (arr.right == null) {
-                    return arr.left;
-                } else {
-                    //delete and reinsert
-                }
-            } else if (arr.data > value) {
-                arr.left =  this.remove(value, arr.left);
-            } else if (arr.data < value) {
-                arr.right = this.remove(value, arr.left);
+        this.minValue = (arr = this.root) => {
+            
+            let minV = arr.data
+            while (arr.left != null) {
+                minV = arr.left.data;
+                arr = arr.left;
             }
+            return minV;
+        },
+
+        this.remove = (value, arr = this.root) => {
+            if (arr == null) {
+                return arr;
+            }
+
+            if (value > arr.data) {
+                arr.right = this.remove(value, arr.right);
+            } else if (value < arr.data) {
+                arr.left = this.remove(value, arr.left);
+            } else {
+                if (!arr.right) {
+                    return arr.left;
+                } else if (!arr.left) {
+                    return arr.right;
+                }
+
+                arr.data = this.minValue(arr.right);
+                arr.right = this.remove(arr.data, arr.right);
+            }
+        
+            return arr;
         }
     }
 }
@@ -85,7 +96,6 @@ class tree {
 let array = [1,3,5,7,8,9,10];
 bst = new tree(array);
 bst.insert(4)
-bst.remove(4)
+bst.remove(9)
 
-console.log(JSON.stringify(bst, null, 4))
 prettyPrint(bst.root)
