@@ -26,76 +26,105 @@ class tree {
             }
 
             let mid = Math.round((start + end)/2);            
-            let rootData = arr[mid-1];
+            let arrData = arr[mid-1];
         
             
             let left = this.buildTree(arr, start, mid-1);
             let right = this.buildTree(arr, mid+1, end);
         
-            return new node(rootData, left, right);
+            return new node(arrData, left, right);
         },
 
         this.root = this.buildTree(arr),
 
-        this.insert = (value, arr = this.root) => {
-            if (arr.data > value) {
-                if (arr.left == null) {
-                    arr.left = new node(value, null, null);
+        this.insert = (value, root = this.root) => {
+            if (root.data > value) {
+                if (root.left == null) {
+                    root.left = new node(value, null, null);
                     return;
                 } else {
-                    this.insert(value, arr.left)
+                    this.insert(value, root.left)
                 }
-            } else if (arr.data < value) {
-                if (arr.right == null) {
-                    arr.right = new node(value, null, null)
+            } else if (root.data < value) {
+                if (root.right == null) {
+                    root.right = new node(value, null, null)
                     return;
                 } else {
-                    this.insert(value, arr.right);
+                    this.insert(value, root.right);
                 }
-            } else if (arr.data == value) {
+            } else if (root.data == value) {
                 return;
             }
         
         },
 
-        this.minValue = (arr = this.root) => {
+        this.minValue = (root = this.root) => {
             
-            let minV = arr.data
-            while (arr.left != null) {
-                minV = arr.left.data;
-                arr = arr.left;
+            let minV = root.data
+            while (root.left != null) {
+                minV = root.left.data;
+                root = root.left;
             }
             return minV;
         },
 
-        this.remove = (value, arr = this.root) => {
-            if (arr == null) {
-                return arr;
+        this.remove = (value, root = this.root) => {
+            if (root == null) {
+                return root;
             }
 
-            if (value > arr.data) {
-                arr.right = this.remove(value, arr.right);
-            } else if (value < arr.data) {
-                arr.left = this.remove(value, arr.left);
+            if (value > root.data) {
+                root.right = this.remove(value, root.right);
+            } else if (value < root.data) {
+                root.left = this.remove(value, root.left);
             } else {
-                if (!arr.right) {
-                    return arr.left;
-                } else if (!arr.left) {
-                    return arr.right;
+                if (!root.right) {
+                    return root.left;
+                } else if (!root.left) {
+                    return root.right;
                 }
 
-                arr.data = this.minValue(arr.right);
-                arr.right = this.remove(arr.data, arr.right);
+                root.data = this.minValue(root.right);
+                root.right = this.remove(root.data, root.right);
             }
         
-            return arr;
+            return root;
+        }, 
+
+        this.find = (value, root = this.root) => {
+            if (root.data == value) {
+                return root
+            } else if (value > root.data) {
+                return this.find(value, root.right);
+            } else {
+                return this.find(value, root.left);
+            }
+        },
+
+        this.levelOrder = (func = (x) => {return x}, root = this.root) => {
+            let array = [];
+            let queue = [];
+            if (root == null) {
+                return null;
+            }
+            queue.push(root)
+            while (queue.length > 0) {
+                let current = queue[0]
+                array.push(func(current.data));
+                if (current.left) {queue.push(current.left)}
+                if (current.right) {queue.push(current.right)}
+                queue.shift();
+            }
+            return array;
         }
+
+
     }
 }
 
-let array = [1,3,5,7,8,9,10];
+let array = [1,3,5,7,8,9,10, 14, 18 ,44, 98 , 99];
 bst = new tree(array);
-bst.insert(4)
-bst.remove(9)
-
+bst.insert(4);
 prettyPrint(bst.root)
+
+console.log(JSON.stringify((bst.levelOrder())))
