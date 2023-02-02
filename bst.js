@@ -183,6 +183,25 @@ class tree {
                 }
             }
             return d;
+        },
+
+        this.isBalanced = (root=this.root, outcome = true) => {
+            if (!(root.left && root.right)) {
+                return outcome;
+            }
+            if (!((this.height(root.left)+1== this.height(root.right)) ||
+                (this.height(root.left)-1 == this.height(root.right)) || 
+                (this.height(root.left)   == this.height(root.right)))) {
+                return false;
+            }
+            outcome = this.isBalanced(root.left, outcome);
+            outcome = this.isBalanced(root.right, outcome);
+
+            return outcome;
+        },
+
+        this.rebalance = (root = this.root) => {
+
         }
 
         
@@ -193,10 +212,12 @@ let array = [3,5,7,8,9,10,
     14,18,44,98 ,99
 ];
 bst = new tree(array);
-bst.insert(4);
 
-console.log(bst.height(bst.root));
-console.log(bst.depth(bst.find(4)))
+bst.insert(4);
+bst.insert(15);
+bst.insert(16);
+bst.insert(97);
 prettyPrint(bst.root)
+console.log(bst.isBalanced());
 
 //console.log(JSON.stringify((bst.levelOrder())))
