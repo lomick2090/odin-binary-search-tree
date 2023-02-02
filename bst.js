@@ -158,18 +158,20 @@ class tree {
         },
 
         this.height = (node) => {
-            let l=0;
-            let r=0;
-            while (node.left) {
-                node = node.left;
-                l++;
+            //if both children are null, it's a leaf, return 0
+            if (!(node.left || node.right)) {
+                return 0;
+            //after establishing at least one children is present, check if right exsists
+            } else if (!node.right) {
+                //if if doesn't left must exist so we check height left
+                return (1 + this.height(node.left))
+            //same logic for left
+            } else if (!node.left) {
+                return (1 + this.height(node.right))
             }
-            while (node.right) {
-                node = node.right;
-                r++;
-            }
-            return (l >= r) ? l : r;
-        },
+            return ((this.height(node.left) >= this.height(node.right)) ? (this.height(node.left)+1) : (this.height(node.right)+1));
+        
+        }
 
         this.depth = (node, root=this.root) => {
             let d = 0
@@ -201,23 +203,9 @@ class tree {
         },
 
         this.rebalance = (root = this.root) => {
-
+            this.root = this.buildTree(this.inOrder((x) => {return x}, root))
         }
 
         
     }
 }
-
-let array = [3,5,7,8,9,10, 
-    14,18,44,98 ,99
-];
-bst = new tree(array);
-
-bst.insert(4);
-bst.insert(15);
-bst.insert(16);
-bst.insert(97);
-prettyPrint(bst.root)
-console.log(bst.isBalanced());
-
-//console.log(JSON.stringify((bst.levelOrder())))
