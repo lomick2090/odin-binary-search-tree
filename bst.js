@@ -116,15 +116,57 @@ class tree {
                 queue.shift();
             }
             return array;
+        },
+
+        this.inOrder = (func = (x) => {return x}, root = this.root, array = []) => {   
+            if (root.left) {
+                this.inOrder(func, root.left, array);
+            }
+            array.push(func(root.data));
+
+            if (root.right) {
+                this.inOrder(func, root.right, array);
+            }
+
+            return array;
+        }, 
+
+        this.preOrder = (func = (x) => {return x}, root = this.root, array = []) => {
+            array.push(func(root.data));
+
+            if (root.left) {
+                this.preOrder(func, root.left, array);
+            }
+            if (root.right) {
+                this.preOrder(func, root.right, array);
+            }
+
+            return array;
+
+        },
+
+        this.postOrder = (func = (x) => {return x}, root = this.root, array = []) => {
+            if (root == null) {
+                return;
+            }
+            this.postOrder(func, root.left, array);
+            this.postOrder(func, root.right, array);
+            array.push(func(root.data));
+
+            return array;
+
         }
-
-
     }
 }
 
-let array = [1,3,5,7,8,9,10, 14, 18 ,44, 98 , 99];
+let array = [1,3,5,7,8,9,10, 
+    //14,18,44,98 ,99
+];
 bst = new tree(array);
 bst.insert(4);
 prettyPrint(bst.root)
+console.log(bst.inOrder());
+console.log(bst.preOrder());
+console.log(bst.postOrder());
 
-console.log(JSON.stringify((bst.levelOrder())))
+//console.log(JSON.stringify((bst.levelOrder())))
