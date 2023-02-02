@@ -109,10 +109,10 @@ class tree {
             }
             queue.push(root)
             while (queue.length > 0) {
-                let current = queue[0]
+                let current = queue[0];
                 array.push(func(current.data));
-                if (current.left) {queue.push(current.left)}
-                if (current.right) {queue.push(current.right)}
+                if (current.left) {queue.push(current.left)};
+                if (current.right) {queue.push(current.right)};
                 queue.shift();
             }
             return array;
@@ -155,18 +155,48 @@ class tree {
 
             return array;
 
+        },
+
+        this.height = (node) => {
+            let l=0;
+            let r=0;
+            while (node.left) {
+                node = node.left;
+                l++;
+            }
+            while (node.right) {
+                node = node.right;
+                r++;
+            }
+            return (l >= r) ? l : r;
+        },
+
+        this.depth = (node, root=this.root) => {
+            let d = 0
+            while (root != node) {
+                if (root.data > node.data) {
+                    root = root.left;
+                    d++;
+                } else {
+                    root = root.right;
+                    d++;
+                }
+            }
+            return d;
         }
+
+        
     }
 }
 
-let array = [1,3,5,7,8,9,10, 
-    //14,18,44,98 ,99
+let array = [3,5,7,8,9,10, 
+    14,18,44,98 ,99
 ];
 bst = new tree(array);
 bst.insert(4);
+
+console.log(bst.height(bst.root));
+console.log(bst.depth(bst.find(4)))
 prettyPrint(bst.root)
-console.log(bst.inOrder());
-console.log(bst.preOrder());
-console.log(bst.postOrder());
 
 //console.log(JSON.stringify((bst.levelOrder())))
